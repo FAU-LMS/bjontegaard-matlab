@@ -1,0 +1,197 @@
+function bdrate = bd_akima(rateA, distA, rateB, distB, plotRCD)
+% Bjontegaard-Delta Rate calculation. Input is a reference (A) and a test
+% (B) performance. At least 2 supporting points are needed. Output is a
+% relative rate-distance (percentage obtained by mutliplying with 100). 
+% Interpolation method is Akima interpolation. 
+
+% BSD 3-Clause License
+%
+% Copyright (c) 2022-2023, Friedrich-Alexander-Universität Erlangen-Nürnberg.
+% All rights reserved.
+%
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+% * Redistributions of source code must retain the above copyright notice, this
+%   list of conditions and the following disclaimer.
+%
+% * Redistributions in binary form must reproduce the above copyright notice,
+%   this list of conditions and the following disclaimer in the documentation
+%   and/or other materials provided with the distribution.
+%
+% * Neither the name of the copyright holder nor the names of its
+%   contributors may be used to endorse or promote products derived from
+%   this software without specific prior written permission.
+%
+% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+% DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+% FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+% DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+% OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+if nargin == 4
+    plotRCD = false;
+end
+
+
+    minDist = max(min(distA), min(distB));
+    maxDist = min(max(distA), max(distB));
+ 
+
+    % Code to plot relative curve differences (RCD)
+    if plotRCD
+        figure;
+        subplot(1,2,1);
+        semilogx(rateA, distA, 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0]);
+        hold on;
+        semilogx(rateB, distB, 'LineStyle','none', 'Marker', 'o', 'Color', [0,1,0]);
+        legend({'RD A', 'RD B'}, 'Location','southeast', 'AutoUpdate','off');
+        upper = max(max(distA), max(distB));
+        lower = min(min(distA), min(distB));
+        suppPoints = [lower:(upper-lower)/1000:upper distA distB];
+        suppPoints = sort(suppPoints);
+        % Remove duplicate entries
+        suppPoints = unique(suppPoints(:).');
+        grid on;
+    else
+        suppPoints =  [];
+    end
+    
+    % Interpolate and integrate points for A and B
+    [intA, interpRatesA] = bdrint(rateA, distA, minDist, maxDist, suppPoints); % suppPoints only used for RCD plot
+    [intB, interpRatesB] = bdrint(rateB, distB, minDist, maxDist, suppPoints);
+
+    avg = (intB - intA) / (maxDist - minDist);
+    
+    bdrate = (10^avg) - 1;
+    
+    if plotRCD
+        relDifference = 100*(10.^(interpRatesB-interpRatesA)-1);
+        yl = ylim;
+        subplot(1,2,2);
+        idcsA = logical(0*relDifference);
+        suppPoints = suppPoints(suppPoints>=minDist & suppPoints<=maxDist);
+        for i = 1:length(distA)
+            idcsA(suppPoints==distA(i)) = 1;
+        end
+        idcsB = logical(0*relDifference);
+        for i = 1:length(distB)
+            idcsB(suppPoints==distB(i)) = 1;
+        end
+        plot(relDifference(idcsA), suppPoints(idcsA), 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0]);
+        hold on;
+        plot(relDifference(idcsB), suppPoints(idcsB), 'LineStyle','none', 'Marker', 'o', 'Color', [0,1,0]);
+        plot(relDifference, suppPoints(suppPoints>=minDist&suppPoints<=maxDist), 'Color', [0,0,0]);
+        plot([100*bdrate 100*bdrate], yl, 'LineStyle', '--', 'Color', [0,0,1]);
+        legend({'Points A', 'Points B', 'RCD', 'BD-Rate'}, 'Location','southeast', 'AutoUpdate','off');       
+        ylim(yl);
+        xlabel('Relative Rate Difference (%)');
+        ylabel('PSNR');
+        grid on;
+    end
+    
+    
+end
+
+
+function [bdrint, ratesOut] = bdrint(rate, dist, low, high, suppPoints)
+
+    nPoints = length(rate);
+
+    for i=1:nPoints
+        log_rate(i) = log10(rate(nPoints+1 - i));
+        log_dist(i) = dist(nPoints+1 - i);
+    end
+
+    
+    for i=1:nPoints-1
+        H(i) = log_dist(i + 1) - log_dist(i);
+        delta(i) = (log_rate(i + 1) - log_rate(i)) / H(i);
+    end
+    
+    %% Akima-determination of derivatives
+    d = zeros(nPoints,1);
+    if nPoints == 2 % Revert to linear interpolation
+        d(:) = delta;
+    else
+        delta_ext = zeros(1, nPoints + 3);
+        delta_ext(3:2+nPoints-1) = delta;
+        delta_ext(2) = 2*delta_ext(3) - delta_ext(4);
+        delta_ext(1) = 2*delta_ext(2) - delta_ext(3);
+        delta_ext(end-1) = 2*delta_ext(end-2) - delta_ext(end-3);
+        delta_ext(end) = 2*delta_ext(end-1) - delta_ext(end-2);
+    
+        for i=1:nPoints
+            d(i) = (abs(delta_ext(i+3)-delta_ext(i+2))*delta_ext(i+1) + abs(delta_ext(i+1) - delta_ext(i))*delta_ext(i+2)) / (abs(delta_ext(i+3)-delta_ext(i+2))+abs(delta_ext(i+1) - delta_ext(i)));
+        end
+    end
+    %% End of Akima determination of derivatives
+    
+    for i=1:nPoints-1 % Determine polynomial coefficients from derivatives
+        c(i) = (3 * delta(i) - 2 * d(i) - d(i + 1)) / H(i);
+        b(i) = (d(i) - 2 * delta(i) + d(i + 1)) / (H(i) * H(i));
+    end
+
+    %%%% Information on target cubic rate function: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % cubic function is rate(i) + s*(d(i) + s*(c(i) + s*(b(i))) where s = x - dist(i)%
+    % or rate(i) + s*d(i) + s*s*c(i) + s*s*s*b(i)                                    %
+    % primitive is s*rate(i) + s*s*d(i)/2 + s*s*s*c(i)/3 + s*s*s*s*b(i)/4            %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
+    result = 0;
+    
+    for i=1:nPoints-1 % Iterate over intervals
+        s0 = log_dist(i);
+        s1 = log_dist(i + 1);
+        
+        % clip s0 to valid range
+        s0 = max(s0, low);
+        s0 = min(s0, high);
+        
+        % clip s1 to valid range
+        s1 = max(s1, low);
+        s1 = min(s1, high);
+                
+        s0 = s0 - log_dist(i);
+        s1 = s1 - log_dist(i);
+        
+        if (s1 > s0) % Add up integrated curve
+            result = result + (s1 - s0) * log_rate(i); 
+            result = result + (s1 * s1 - s0 * s0) * d(i) / 2;
+            result = result + (s1 * s1 * s1 - s0 * s0 * s0) * c(i) / 3;
+            result = result + (s1 * s1 * s1 * s1 - s0 * s0 * s0 * s0) * b(i) / 4;
+        end
+    end
+
+    % Calculate rate points for RCD plotting
+    ratesOut = [];
+    if ~isempty(suppPoints)
+        subplot(1,2,1);
+        for i=1:nPoints-1
+            s0 = log_dist(i);
+            s1 = log_dist(i + 1);
+            if i==1
+                currPoints = suppPoints(suppPoints>=s0&suppPoints<=s1);
+            else
+                currPoints = suppPoints(suppPoints>s0&suppPoints<=s1);
+            end
+            interpRates = log_rate(i) + (currPoints-s0).*d(i) + c(i)*(currPoints-s0).^2 + b(i)*(currPoints-s0).^3;
+            plot(10.^interpRates, currPoints, 'Color', [0,0,0]);   
+            ratesOut = [ratesOut interpRates];
+        end
+        suppPoints = suppPoints(suppPoints >= min(log_dist) & suppPoints <= max(log_dist)); % In the current valid area
+        ratesOut = ratesOut(suppPoints>=low & suppPoints<=high);
+        xlabel('Rate');
+        ylabel('PSNR');
+        title('Akima Interpolation');
+    end
+
+    
+    bdrint = result;
+end
