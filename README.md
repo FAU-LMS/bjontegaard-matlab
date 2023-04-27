@@ -52,7 +52,7 @@ They can be created using:
 
 Here is an example for a RCD plot: 
 
-![Measured data](https://raw.githubusercontent.com/FAU-LMS/bjontegaard-matlab/main/doc/rcd.png)
+![Relative curve difference](https://github.com/FAU-LMS/bjontegaard-matlab/blob/main/doc/rcd.png)
 
 ## Comparison between interpolation methods
 
