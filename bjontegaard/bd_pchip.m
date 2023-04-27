@@ -47,9 +47,9 @@ end
     if plotRCD
         figure;
         subplot(1,2,1);
-        semilogx(rateA, distA, 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0]);
+        semilogx(rateA, distA, 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0], 'LineWidth', 1.5);
         hold on;
-        semilogx(rateB, distB, 'LineStyle','none', 'Marker', 'o', 'Color', [0,1,0]);
+        semilogx(rateB, distB, 'LineStyle','none', 'Marker', 'o', 'Color', [0,0.8,0], 'LineWidth', 1.5);
         legend({'RD A', 'RD B'}, 'Location','southeast', 'AutoUpdate','off');
         upper = max(max(distA), max(distB));
         lower = min(min(distA), min(distB));
@@ -83,9 +83,9 @@ end
         for i = 1:length(distB)
             idcsB(suppPoints==distB(i)) = 1;
         end
-        plot(relDifference(idcsA), suppPoints(idcsA), 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0]);
+        plot(relDifference(idcsA), suppPoints(idcsA), 'LineStyle','none', 'Marker', 'x', 'Color', [1,0,0], 'LineWidth', 1.5);
         hold on;
-        plot(relDifference(idcsB), suppPoints(idcsB), 'LineStyle','none', 'Marker', 'o', 'Color', [0,1,0]);
+        plot(relDifference(idcsB), suppPoints(idcsB), 'LineStyle','none', 'Marker', 'o', 'Color', [0,.8,0], 'LineWidth', 1.5);
         plot(relDifference, suppPoints(suppPoints>=minDist&suppPoints<=maxDist), 'Color', [0,0,0]);
         plot([100*bdrate 100*bdrate], yl, 'LineStyle', '--', 'Color', [0,0,1]);
         legend({'Points A', 'Points B', 'RCD', 'BD-Rate'}, 'Location','southeast', 'AutoUpdate','off');       
