@@ -50,9 +50,11 @@ For in-depth evaluation of codec comparison results, we recommend to take relati
 They can be created using:
 * `bdr_akima = bd_akima(rate_anchor, psnr_anchor, rate_test, psnr_test, true);`
 
-Here is an example for a RCD plot: 
+Here is an example for a RCD plot. 
 
 ![Relative curve difference](https://github.com/FAU-LMS/bjontegaard-matlab/blob/main/doc/rcd.png)
+
+The left plot shows the supporting points and the Akima-interpolated curves for both anchor and test. The right plot shows the relative horizontal difference between the two curves in percentage. 
 
 ## Comparison between interpolation methods
 
