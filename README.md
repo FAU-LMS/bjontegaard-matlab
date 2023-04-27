@@ -1,8 +1,6 @@
 [![License](https://img.shields.io/badge/license-BSD%203--Clause-green)](https://opensource.org/licenses/BSD-3-Clause)
-![GitHub top language](https://img.shields.io/github/languages/top/FAU-LMS/bjontegaard)
-[![GitHub stars](https://img.shields.io/github/stars/FAU-LMS/bjontegaard)](https://github.com/FAU-LMS/bjontegaard/stargazers)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/bjontegaard)
-![PyPI](https://img.shields.io/pypi/v/bjontegaard)
+![GitHub top language](https://img.shields.io/github/languages/top/FAU-LMS/bjontegaard-matlab)
+[![GitHub stars](https://img.shields.io/github/stars/FAU-LMS/bjontegaard-matlab)](https://github.com/FAU-LMS/bjontegaard-matlab/stargazers)
 
 # Bjøntegaard-Delta Interpolation
 ## Introduction
