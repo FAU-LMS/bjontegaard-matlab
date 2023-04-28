@@ -1,6 +1,5 @@
 [![License](https://img.shields.io/badge/license-BSD%203--Clause-green)](https://opensource.org/licenses/BSD-3-Clause)
 ![GitHub top language](https://img.shields.io/github/languages/top/FAU-LMS/bjontegaard-matlab)
-[![GitHub stars](https://img.shields.io/github/stars/FAU-LMS/bjontegaard-matlab)](https://github.com/FAU-LMS/bjontegaard-matlab/stargazers)
 
 # Bjøntegaard-Delta Interpolation
 ## Introduction
@@ -15,7 +14,7 @@ In [[3]](https://jvet-experts.org/doc_end_user/documents/20_Teleconference/wg11/
 In our tests, the implementation of PCHIP returns the same value as the Excel-Implementation with an accuracy of at least 10 decimal positions. 
 The BD can also be calculated for more than four RD points (not yet cross-checked with respective Excel implementations).
 
-In a further study [[4]](https://doi.org/10.48550/arXiv.2202.12565), it was found that **Akima interpolation** returns even more accurate results. An example for corresponding interpolated curves is shown below.
+In further studies [[4-5]](https://doi.org/10.48550/arXiv.2202.12565), it was found that **Akima interpolation** returns more accurate and stable results. An example for corresponding interpolated curves is shown below.
 
 ## Usage
 
@@ -44,7 +43,7 @@ Available interpolation methods:
 
 ## Relative curve difference plots (RCD-plots)
 
-For in-depth evaluation of codec comparison results, we recommend to take relative curve difference plots (RCD-plots) into account.
+For in-depth evaluation of codec comparison results, we recommend to take relative curve difference plots (RCD-plots) into account (see [5]).
 They can be created using:
 * `bdr_akima = bd_akima(rate_anchor, psnr_anchor, rate_test, psnr_test, true);`
 
@@ -65,7 +64,8 @@ For this example, the quality is represented by the SSIM value. Note that the ex
 [1] G. Bjontegaard, "Calculation of average PSNR differences between RD-curves", VCEG-M33, Austin, TX, USA, April 2001. <br/>
 [2] F. Bossen, "Common HM test conditions and software reference configurations", JCTVC-L1100, Geneva, Switzerland, April 2013. <br/>
 [3] F. Bossen, "VTM common test conditions and software reference configurations for SDR video", JVET-T2020, Teleconference, October 2020. <br/>
-[4] C. Herglotz, M. Kränzler, R. Mons, A. Kaup, "Beyond Bjontegaard: Limits of Video Compression Performance Comparisons", submitted to ICIP 2022, [preprint](https://doi.org/10.48550/arXiv.2202.12565) available. <br/>
+[4] C. Herglotz, M. Kränzler, R. Mons, A. Kaup, "Beyond Bjontegaard: Limits of Video Compression Performance Comparisons", Proc. International Conference on Image Processing (ICIP) 2022, [online](https://doi.org/10.48550/arXiv.2202.12565) available. <br/>
+[5] C. Herglotz, H. Och, A. Meyer, G. Ramasubbu, L. Eichermüller, M. Kränzler, F. Brand, K. Fischer, D. T. Nguyen, A. Regensky, and A. Kaup, “The Bjøntegaard Bible – Why Your Way of Comparing Video Codecs May Be Wrong,” [preprint](https://arxiv.org/abs/2304.12852) available, 2023. 
 
 ## License
 
