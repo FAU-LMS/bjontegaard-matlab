@@ -2,6 +2,9 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/FAU-LMS/bjontegaard-matlab)
 
 # Bjøntegaard-Delta Interpolation
+
+BD-rate implementations in Matlab. Also available in [Python](https://github.com/FAU-LMS/bjontegaard).
+
 ## Introduction
 The Bjøntegaard-Delta (BD) metrics (delta bit rate and delta PSNR) described in [1] are well known metrics to measure the average differences between two rate-distortion (RD) curves. They are based on **cubic-spline interpolation (CSI)** of the RD curves and [Matlab](https://www.mathworks.com/matlabcentral/fileexchange/41749-bjontegaard-metric-calculation-bd-psnr) as well as [Python](https://github.com/google/compare-codecs/blob/master/lib/visual_metrics.py) implementations are available on the internet.
 
