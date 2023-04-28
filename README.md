@@ -9,9 +9,9 @@ However, this way of interpolation using a third-order polynomial leads to probl
 This has also been experienced during the standardization of HEVC.
 Consequently, the so-called **piecewise cubic hermite interpolation (PCHIP)** has been implemented in the JCT-VC Common Test Conditions (CTC) Excel sheet [[2]](http://phenix.int-evry.fr/jct/doc_end_user/documents/12_Geneva/wg11/JCTVC-L1100-v1.zip) for performance evaluation. In further studies [[4]](https://doi.org/10.48550/arXiv.2202.12565) - [[5]](https://arxiv.org/abs/2304.12852), it was found that **Akima interpolation** returns more accurate and stable results. An example for corresponding interpolated curves is shown below.
 
-This page provides BD-rate implementations ([see here for a Python implementation](https://github.com/FAU-LMS/bjontegaard)) for both PCHIP and Akima interpolation (Matlab).
+This page provides BD-rate implementations ([see here for a Python implementation](https://github.com/FAU-LMS/bjontegaard)) for both PCHIP and Akima interpolation in Matlab.
 In our tests, the implementation of PCHIP returns the same value as the Excel-Implementation from [[3]](https://jvet-experts.org/doc_end_user/documents/20_Teleconference/wg11/JVET-T2010-v2.zip) with an accuracy of at least 10 decimal positions. 
-The scripts allow to calculate the BD for any number of RD points greater one (not cross-checked with respective Excel implementations).
+The scripts allow to calculate the BD for any number of RD points greater one.
 
 
 ## Usage
