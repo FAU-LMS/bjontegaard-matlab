@@ -39,8 +39,8 @@ disp(['Akima BDR: ' num2str(bdr_akima*100,'%4.16f') '%']);
 The parameters `rate_anchor` and `dist_anchor` describe the rate-distortion points of the anchor, `rate_test` and `dist_test` describe the rate-distortion points of the test codec.
 
 Available interpolation methods:
-* `'bd_pchip'`: Piecewise cubic hermite interpolation (used in standardizations [[2]](http://phenix.int-evry.fr/jct/doc_end_user/documents/12_Geneva/wg11/JCTVC-L1100-v1.zip), [[3]]((https://jvet-experts.org/doc_end_user/documents/20_Teleconference/wg11/JVET-T2010-v2.zip)))
-* `'bd_akima'`: Akima interpolation [[4]](https://doi.org/10.48550/arXiv.2202.12565)
+* `'bd_pchip.m'`: Piecewise cubic hermite interpolation (used in standardizations [[2]](http://phenix.int-evry.fr/jct/doc_end_user/documents/12_Geneva/wg11/JCTVC-L1100-v1.zip), [[3]]((https://jvet-experts.org/doc_end_user/documents/20_Teleconference/wg11/JVET-T2010-v2.zip)))
+* `'bd_akima.m'`: Akima interpolation [[4]](https://doi.org/10.48550/arXiv.2202.12565)
 
 ## Relative curve difference plots (RCD-plots)
 
