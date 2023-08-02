@@ -1,8 +1,10 @@
 function bdrate = bd_akima(rateA, distA, rateB, distB, plotRCD)
+% bd_akima(rateA, distA, rateB, distB, plotRCD)
 % Bjontegaard-Delta Rate calculation. Input is a reference (A) and a test
 % (B) performance. At least 2 supporting points are needed. Output is a
 % relative rate-distance (percentage obtained by mutliplying with 100). 
-% Interpolation method is Akima interpolation. 
+% Interpolation method is Akima interpolation. plotRCD is an optional
+% input. If plotRCD==true, a relative difference curve is plotted. 
 
 % BSD 3-Clause License
 %
