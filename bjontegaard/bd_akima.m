@@ -1,10 +1,12 @@
-function bdrate = bd_akima(rateA, distA, rateB, distB, plotRCD)
-% bd_akima(rateA, distA, rateB, distB, plotRCD)
+function [bdrate, IoU] = bd_akima(rateA, distA, rateB, distB, plotRCD)
+% bd_akima(rateA, distA, rateB, distB, plotRCD, printIoU)
 % Bjontegaard-Delta Rate calculation. Input is a reference (A) and a test
 % (B) performance. At least 2 supporting points are needed. Output is a
 % relative rate-distance (percentage obtained by mutliplying with 100). 
 % Interpolation method is Akima interpolation. plotRCD is an optional
-% input. If plotRCD==true, a relative difference curve is plotted. 
+% input. If plotRCD==true, a relative difference curve is plotted. IoU is
+% the relative intersection over union / overlap of the two curves in the
+% dist-domain. A warning is displayed if the IoU is smaller than 75%. 
 
 % BSD 3-Clause License
 %
@@ -43,6 +45,12 @@ end
 
     minDist = max(min(distA), min(distB));
     maxDist = min(max(distA), max(distB));
+
+    % Calculate IoU
+    IoU = (maxDist - minDist) / (max(max(distA), max(distB)) - min(min(distA), min(distB)));
+    if IoU < 0.75
+        disp(['WARNING: Overlap/intersection over union of curves at ' num2str(100*IoU) '%']);
+    end
  
 
     % Code to plot relative curve differences (RCD)
